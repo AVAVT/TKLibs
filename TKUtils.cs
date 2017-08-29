@@ -58,4 +58,22 @@ public class TKUtils : MonoBehaviour
         }
         return newObject.GetComponent<T>();
     }
+    
+
+    // Better Lerps that support over/under shot
+
+    public static float Lerp(float start, float end, float value)
+    {
+        return start + (end - start) * value;
+    }
+
+    public static Vector2 Lerp(Vector2 start, Vector2 end, float value)
+    {
+        return start + (end - start) * value;
+    }
+
+    public static Vector3 Lerp(Vector3 start, Vector3 end, float value)
+    {
+        return start + (end - start) * value;
+    }
 }
