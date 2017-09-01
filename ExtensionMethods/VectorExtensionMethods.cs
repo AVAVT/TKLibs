@@ -72,4 +72,9 @@ public static class VectorExtensionMethods
     {
         return (Mathf.RoundToInt(Mathf.Abs(vector.x - target.x) + Mathf.Abs(vector.y - target.y)));
     }
+
+    public static Vector2 RotateBy(this Vector2 vector, float degree)
+    {
+        return Quaternion.Euler(0, 0, degree) * vector;
+    }
 }
