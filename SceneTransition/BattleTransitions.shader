@@ -105,8 +105,8 @@
 
 					fixed4 col = tex2D(_MainTex, i.uv + _Cutoff * direction);
 
-					if (transit.b < _Cutoff)
-						return col = lerp(col, _Color, _Fade);
+					float fade = lerp(0, _Fade, sin(_Cutoff*3.14159));
+					return col = lerp(col, _Color, clamp((_Cutoff-transit.b)/fade, 0.0, 1.0));
 
 					return col;
 				}					

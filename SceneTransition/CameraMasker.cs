@@ -33,6 +33,8 @@ public class CameraMasker : MonoBehaviour
 
     IEnumerator MaskCoroutine(float start, float end, string targetScene = null)
     {
+		yield return null;
+
         float time = 0;
         while (time < maskTime)
         {
