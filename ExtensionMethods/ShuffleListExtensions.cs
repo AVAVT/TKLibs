@@ -23,7 +23,6 @@ public static class ShuffleListExtensions
             list[n] = value;
         }
     }
-
     /// <summary>
     /// Return a random item from the list.
     /// Sampling with replacement.

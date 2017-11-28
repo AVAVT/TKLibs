@@ -2,7 +2,6 @@ using UnityEngine;
 
 public static class ExtensionMethods
 {
-
     public static float LinearRemap(this float value,
                                      float valueRangeMin, float valueRangeMax,
                                      float newRangeMin, float newRangeMax)
@@ -14,5 +13,4 @@ public static class ExtensionMethods
     {
         return Random.value < negativeProbability ? -value : value;
     }
-
 }
