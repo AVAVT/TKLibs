@@ -14,7 +14,6 @@ public class TKSceneManager : MonoBehaviour
   public static readonly string START_SCENE = "StartScene";
   public static readonly string SETTINGS_SCENE = "SettingsScene";
 
-
   private static readonly List<string> popupScenes = new List<string>() { };
   private static readonly List<string> additiveScene = new List<string>();
 

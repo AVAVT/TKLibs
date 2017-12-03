@@ -76,4 +76,8 @@ public class TKUtils : MonoBehaviour
     {
         return start + (end - start) * value;
     }
+
+    public static float ValueFromCurve(AnimationCurve curve, float x, float min, float max){
+      return Mathf.Lerp(min , max, curve.Evaluate(x));
+    }
 }
