@@ -80,4 +80,8 @@ public class TKUtils : MonoBehaviour
     public static float ValueFromCurve(AnimationCurve curve, float x, float min, float max){
       return Mathf.Lerp(min , max, curve.Evaluate(x));
     }
+
+    public static int IntValueFromCurve(AnimationCurve curve, float x, float min, float max){
+      return Mathf.RoundToInt(Mathf.Lerp(min , max, curve.Evaluate(x)));
+    }
 }
