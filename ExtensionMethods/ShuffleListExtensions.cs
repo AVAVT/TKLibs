@@ -23,6 +23,25 @@ public static class ShuffleListExtensions
             list[n] = value;
         }
     }
+
+    /// <summary>
+    /// Shuffle the list in place using the Fisher-Yates method and provided rng.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    public static void Shuffle<T>(this IList<T> list, System.Random rng)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+
     /// <summary>
     /// Return a random item from the list.
     /// Sampling with replacement.
@@ -37,6 +56,19 @@ public static class ShuffleListExtensions
     }
 
     /// <summary>
+    /// Return a random item from the list with provided rng.
+    /// Sampling with replacement.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static T RandomItem<T>(this IList<T> list, System.Random rng)
+    {
+        if (list.Count == 0) throw new System.IndexOutOfRangeException("Cannot select a random item from an empty list");
+        return list[rng.Next(list.Count)];
+    }
+
+    /// <summary>
     /// Removes a random item from the list, returning that item.
     /// Sampling without replacement.
     /// </summary>
@@ -47,6 +79,22 @@ public static class ShuffleListExtensions
     {
         if (list.Count == 0) throw new System.IndexOutOfRangeException("Cannot remove a random item from an empty list");
         int index = UnityEngine.Random.Range(0, list.Count);
+        T item = list[index];
+        list.RemoveAt(index);
+        return item;
+    }
+
+    /// <summary>
+    /// Removes a random item from the list with provided rng, returning that item.
+    /// Sampling without replacement.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static T RemoveRandom<T>(this IList<T> list, System.Random rng)
+    {
+        if (list.Count == 0) throw new System.IndexOutOfRangeException("Cannot remove a random item from an empty list");
+        int index = rng.Next(list.Count);
         T item = list[index];
         list.RemoveAt(index);
         return item;
