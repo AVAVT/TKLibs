@@ -113,5 +113,10 @@ namespace TKLibs
     {
       return Quaternion.Euler(0, 0, degree) * vector;
     }
+
+    public static Vector2 RandomPointInRadius(this Vector2 point, float radius)
+    {
+      return point + Vector2.one.RotateBy(Random.Range(0f, 360f)) * radius * Mathf.Sqrt(Random.Range(0f, 1f));
+    }
   }
 }
