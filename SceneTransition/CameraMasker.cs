@@ -19,10 +19,10 @@ public class CameraMasker : MonoBehaviour
         Unmask();
     }
 
-    public void MaskChangeScene(string sceneName)
+    public void MaskChangeScene(string sceneName, System.Action callback = null)
     {
         TransitionMaterial.SetTexture("_TransitionTex", maskTexture);
-        StartCoroutine(MaskCoroutine(0f, 1f, sceneName));
+        StartCoroutine(MaskCoroutine(0f, 1f, sceneName, callback));
     }
 
     public void Unmask()
@@ -31,7 +31,7 @@ public class CameraMasker : MonoBehaviour
         StartCoroutine(MaskCoroutine(1f, 0f));
     }
 
-    IEnumerator MaskCoroutine(float start, float end, string targetScene = null)
+    IEnumerator MaskCoroutine(float start, float end, string targetScene = null, System.Action callback = null)
     {
 		yield return null;
 
@@ -45,6 +45,8 @@ public class CameraMasker : MonoBehaviour
         }
 
         TransitionMaterial.SetFloat("_Cutoff", end);
+        if(callback != null) callback();
+
         if (!string.IsNullOrEmpty(targetScene))
         {
             SceneManager.LoadScene(targetScene);
