@@ -8,14 +8,15 @@ public class CurvableValue
   [SerializeField] public float max;
   [SerializeField] public float start;
   [SerializeField] public float end;
+  [SerializeField] public bool zeroBelowStart;
 
   public float ValueAt(float x)
   {
-    return TKUtils.ValueFromCurve(curve, (x - start) / (end - start), min, max);
+    return (zeroBelowStart && x < start) ? 0 : TKUtils.ValueFromCurve(curve, (x - start) / (end - start), min, max);
   }
 
   public int IntValueAt(float x)
   {
-    return TKUtils.IntValueFromCurve(curve, (x - start) / (end - start), min, max);
+    return (zeroBelowStart && x < start) ? 0 : TKUtils.IntValueFromCurve(curve, (x - start) / (end - start), min, max);
   }
 }
