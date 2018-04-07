@@ -64,7 +64,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _Distort: 0
     - _DstBlend: 0
-    - _Fade: 0.385
+    - _Fade: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
