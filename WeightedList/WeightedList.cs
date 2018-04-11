@@ -4,9 +4,10 @@ using UnityEngine;
 
 public static class WeightedList
 {
-  public static T RandomWeightedItem<T>(this List<WeightedItem<T>> list)
+  public static T RandomWeightedItem<T>(this List<WeightedItem<T>> list, System.Random random = null)
   {
-    float ran = Random.Range(0, 100) / 100f;
+    if (random == null) random = new System.Random();
+    float ran = random.Next(0, 100) / 100f;
     float weight = 0;
 
     foreach (WeightedItem<T> item in list)
