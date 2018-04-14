@@ -1,9 +1,25 @@
 using UnityEngine;
+using ApproximationNET;
 
 namespace TKLibs
 {
   public static class VectorExtensionMethods
   {
+    public static Vector2 ApproxClampMagnitude(this Vector2 vector, float magnitude)
+    {
+      return vector.sqrMagnitude > magnitude * magnitude
+        ? vector.ApproxScaleTo(magnitude)
+        : vector;
+    }
+    
+    public static Vector2 ApproxScaleTo(this Vector2 vector, float magnitude)
+    {
+      float idist = Approximation.InvSqrt(vector.sqrMagnitude);
+      return new Vector2(
+        vector.x * idist * magnitude,
+        vector.y * idist * magnitude
+      );
+    }
     public static Vector2 ScaleTo(this Vector2 vector, float magnitude)
     {
       return vector.normalized * magnitude;
