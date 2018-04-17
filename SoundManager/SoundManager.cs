@@ -24,14 +24,19 @@ public class SoundManager : MonoBehaviour
   public static SoundManager Instance { get; private set; }
   [SerializeField]
   private AudioMixer mixer = null;
+  [SerializeField]
   public int poolAmount;
+  [SerializeField]
   public bool canGrow;
+  [SerializeField]
+  public GameObject pooledPrefab;
 
   [SerializeField]
   private List<string> audioNames = new List<string>();
 
   [SerializeField]
   private List<AudioSource> audioDatas = new List<AudioSource>();
+  private List<AudioSource> pooledAudioSource;
   private List<GameObject> pooledObject;
   private SoundSetting soundSetting;
 
@@ -82,6 +87,7 @@ public class SoundManager : MonoBehaviour
     {
       Destroy(this);
     }
+    InitializeAudioPool();
   }
 
   private void Start()
@@ -116,8 +122,21 @@ public class SoundManager : MonoBehaviour
   /// <param name ="gameObject">gameObject to attach audioSource</param>
   public void PlayOneShot(AudioKey key, Vector3 position)
   {
-    audioDatas[(int)key].PlayOneShot(audioDatas[(int)key].clip);
-    audioDatas[(int)key].transform.position = position;
+    int? nullableIndex = GetPoooledObjectIndex();
+    if(nullableIndex == null){
+      return;
+    }
+    int index = (int)nullableIndex;
+    pooledObject[index].SetActive(true);  
+    pooledAudioSource[index].clip = audioDatas[(int)key].clip;
+    pooledAudioSource[index].volume = audioDatas[(int)key].volume;
+    pooledAudioSource[index].loop = audioDatas[(int)key].loop;
+    pooledAudioSource[index].spatialBlend = audioDatas[(int)key].spatialBlend;
+    pooledAudioSource[index].dopplerLevel = audioDatas[(int)key].dopplerLevel;
+    pooledAudioSource[index].minDistance = audioDatas[(int)key].minDistance;
+    pooledAudioSource[index].maxDistance = audioDatas[(int)key].maxDistance;
+    pooledAudioSource[index].outputAudioMixerGroup = audioDatas[(int)key].outputAudioMixerGroup;
+    pooledAudioSource[index].Play();
   }
 
   public void Play2DSFX(AudioKey key)
@@ -271,30 +290,28 @@ public class SoundManager : MonoBehaviour
 
   #region Pooling
 
-  private void InitializePooledAudioSource()
+  private void InitializeAudioPool()
   {
     pooledObject = new List<GameObject>();
-    audioDatas = new List<AudioSource>();
+    pooledAudioSource = new List<AudioSource>();
     for (int i = 0; i < poolAmount; i++)
     {
-      GameObject obj = new GameObject("AudioSource");
-      obj.AddComponent<AudioSource>();
-      audioDatas.Add(obj.GetComponent<AudioSource>());
+      GameObject obj = Instantiate(pooledPrefab);
+      pooledAudioSource.Add(obj.GetComponent<AudioSource>());
       obj.transform.parent = this.transform;
       obj.SetActive(false);
       pooledObject.Add(obj);
     }
   }
 
-  public int? GetPoooledObject()
+  public int? GetPoooledObjectIndex()
   {
     for (int i = 0; i < pooledObject.Count(); i++)
     {
       if (pooledObject[i] == null)
       {
-        GameObject obj = new GameObject("AudioSource");
-        obj.AddComponent<AudioSource>();
-        audioDatas.Add(obj.GetComponent<AudioSource>());
+        GameObject obj = Instantiate(pooledPrefab);
+        pooledAudioSource.Add(obj.GetComponent<AudioSource>());
         obj.transform.parent = this.transform;
         obj.SetActive(false);
         pooledObject[i] = obj;
@@ -307,9 +324,8 @@ public class SoundManager : MonoBehaviour
 
       if (canGrow)
       {
-        GameObject obj = new GameObject("AudioSource");
-        obj.AddComponent<AudioSource>();
-        audioDatas.Add(obj.GetComponent<AudioSource>());
+        GameObject obj = Instantiate(pooledPrefab);
+        pooledAudioSource.Add(obj.GetComponent<AudioSource>());
         obj.transform.parent = this.transform;
         obj.SetActive(false);
         pooledObject.Add(obj);
@@ -348,6 +364,9 @@ public class SoundManager : MonoBehaviour
     {
       soundManager = target as SoundManager;
       soundManager.mixer = EditorGUILayout.ObjectField("AudioMixer", soundManager.mixer, typeof(AudioMixer), false) as AudioMixer;
+      soundManager.pooledPrefab = EditorGUILayout.ObjectField("PooledObject", soundManager.pooledPrefab, typeof(GameObject), false) as GameObject;
+      soundManager.poolAmount = EditorGUILayout.IntField("PoolAmount", soundManager.poolAmount);
+      soundManager.canGrow = EditorGUILayout.Toggle("CanGrow", soundManager.canGrow);
       EditorGUILayout.Separator();
 
       #region AudioData
@@ -376,18 +395,16 @@ public class SoundManager : MonoBehaviour
           EditorGUILayout.EndHorizontal();
           soundManager.audioDatas[i].clip = EditorGUILayout.ObjectField("AudioClip", soundManager.audioDatas[i].clip, typeof(AudioClip), false) as AudioClip;
           soundManager.audioDatas[i].loop = EditorGUILayout.Toggle("Loop", soundManager.audioDatas[i].loop);
-          soundManager.audioDatas[i].playOnAwake = EditorGUILayout.Toggle("PlayOnAwake", soundManager.audioDatas[i].playOnAwake);
           soundManager.audioDatas[i].volume = EditorGUILayout.Slider("Volume", soundManager.audioDatas[i].volume, 0, 1);
-          soundManager.audioDatas[i].pitch = EditorGUILayout.Slider("Pitch", soundManager.audioDatas[i].pitch, -3, 3);
-          soundManager.audioDatas[i].bypassEffects = EditorGUILayout.Toggle("BypassEffects", soundManager.audioDatas[i].bypassEffects);
-          soundManager.audioDatas[i].bypassListenerEffects = EditorGUILayout.Toggle("BypassListenerEffects", soundManager.audioDatas[i].bypassListenerEffects);
-          soundManager.audioDatas[i].bypassReverbZones = EditorGUILayout.Toggle("BypassReverbZone", soundManager.audioDatas[i].bypassReverbZones);
-          soundManager.audioDatas[i].reverbZoneMix = EditorGUILayout.Slider("ReverbZoneMix", soundManager.audioDatas[i].reverbZoneMix, 0, 1.1f);
+          // soundManager.audioDatas[i].pitch = EditorGUILayout.Slider("Pitch", soundManager.audioDatas[i].pitch, -3, 3);
+          // soundManager.audioDatas[i].bypassEffects = EditorGUILayout.Toggle("BypassEffects", soundManager.audioDatas[i].bypassEffects);
+          // soundManager.audioDatas[i].bypassListenerEffects = EditorGUILayout.Toggle("BypassListenerEffects", soundManager.audioDatas[i].bypassListenerEffects);
+          // soundManager.audioDatas[i].bypassReverbZones = EditorGUILayout.Toggle("BypassReverbZone", soundManager.audioDatas[i].bypassReverbZones);
+          // soundManager.audioDatas[i].reverbZoneMix = EditorGUILayout.Slider("ReverbZoneMix", soundManager.audioDatas[i].reverbZoneMix, 0, 1.1f);
           soundManager.audioDatas[i].spatialBlend = EditorGUILayout.Slider("SpatialBlend", soundManager.audioDatas[i].spatialBlend, 0, 1);
           soundManager.audioDatas[i].dopplerLevel = EditorGUILayout.Slider("DopplerLevel", soundManager.audioDatas[i].dopplerLevel, 0, 1);
           soundManager.audioDatas[i].minDistance = EditorGUILayout.FloatField("MinDistance", soundManager.audioDatas[i].minDistance);
           soundManager.audioDatas[i].maxDistance = EditorGUILayout.FloatField("MaxDistance", soundManager.audioDatas[i].maxDistance);
-          soundManager.audioDatas[i].mute = EditorGUILayout.Toggle("Mute", soundManager.audioDatas[i].mute);
           soundManager.audioDatas[i].outputAudioMixerGroup = EditorGUILayout.ObjectField("OutPut", soundManager.audioDatas[i].outputAudioMixerGroup, typeof(AudioMixerGroup), false) as AudioMixerGroup;
           if (soundManager.audioDatas[i].outputAudioMixerGroup == null)
           {
@@ -463,7 +480,7 @@ public class SoundManager : MonoBehaviour
             var content = SCRIPT_FILE_CONTENT.Replace("[CONTENT]", innerContent);
             writer.Write(content);
             AssetDatabase.Refresh();
-            Debug.Log(string.Format("have been saved : {0}", fullPath));
+            Debug.Log(string.Format("AudioKey have been saved : {0}", fullPath));
           }
       }
 
