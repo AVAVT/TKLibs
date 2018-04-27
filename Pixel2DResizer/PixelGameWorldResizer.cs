@@ -25,12 +25,12 @@ public class PixelGameWorldResizer : MonoBehaviour
   public System.Action<int> OnScaleChanged;
   public Vector2Int minViewportSize;
 
-    public void UpdateGameScaleForView(int width, int height)
+  public void UpdateGameScaleForView(int width, int height)
   {
-    Scale = Mathf.Min(
+    Scale = Mathf.Max(Mathf.Min(
       width / minViewportSize.x,
       height / minViewportSize.y
-    );
+    ), 1);
 
     transform.position = new Vector2(
       width / 2f % 1,
