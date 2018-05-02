@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CursorInterator : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CursorInteractor : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
   public Selectable targetSelectable;
   private void Start()
