@@ -24,7 +24,7 @@ public class CursorController : MonoBehaviour
   private void Update()
   {
     (transform as RectTransform).anchoredPosition = (
-      Input.mousePosition / GamePlayController.Instance.Services.gameWorldResizerService.Scale
+      Input.mousePosition / GameController.Instance.Services.gameWorldResizerService.Scale
     ).xy();
   }
 
