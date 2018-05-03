@@ -19,12 +19,6 @@ using UnityEditor;
 /// </summary>
 public class SoundManager : MonoBehaviour
 {
-	[SerializeField]
-	private enum SoundType
-	{
-		BGM,
-		SFX
-	}
 	private const float MAX_DECIBEL = 0f;
 	private const float MIN_DECIBEL = -80f;
 	public static SoundManager Instance { get; private set; }
@@ -42,8 +36,6 @@ public class SoundManager : MonoBehaviour
 
 	[SerializeField]
 	private List<AudioSource> audioDatas = new List<AudioSource>();
-	[SerializeField]
-	private SoundType soundType;
 	private List<AudioSource> pooledAudioSource;
 	private List<GameObject> pooledObject;
 	private SoundSetting soundSetting;
