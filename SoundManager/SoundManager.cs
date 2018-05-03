@@ -398,7 +398,6 @@ public class SoundManager : MonoBehaviour
 					soundManager.audioDatas[i].clip = EditorGUILayout.ObjectField("AudioClip", soundManager.audioDatas[i].clip, typeof(AudioClip), false) as AudioClip;
 					soundManager.audioDatas[i].loop = EditorGUILayout.Toggle("Loop", soundManager.audioDatas[i].loop);
 					soundManager.audioDatas[i].volume = EditorGUILayout.Slider("Volume", soundManager.audioDatas[i].volume, 0, 1);
-					soundManager.soundType = (SoundManager.SoundType)EditorGUILayout.EnumPopup("SoundType", soundManager.soundType);
 					// soundManager.audioDatas[i].pitch = EditorGUILayout.Slider("Pitch", soundManager.audioDatas[i].pitch, -3, 3);
 					// soundManager.audioDatas[i].bypassEffects = EditorGUILayout.Toggle("BypassEffects", soundManager.audioDatas[i].bypassEffects);
 					// soundManager.audioDatas[i].bypassListenerEffects = EditorGUILayout.Toggle("BypassListenerEffects", soundManager.audioDatas[i].bypassListenerEffects);
