@@ -268,10 +268,12 @@ public class SoundManager : MonoBehaviour
 		}));
 	}
 
-	public void CrossFade(AudioKey currentKey, AudioKey targetKey, float fadeDuration)
+	public void CrossFade(AudioKey targetKey, float fadeDuration)
 	{
-    
-		FadeOut(currentKey, fadeDuration);
+    for(int i = 0; i< audioDatas.Count; i++){
+			if(audioDatas[i].isPlaying)
+				FadeOut((AudioKey)i, fadeDuration);
+		}		
 		FadeIn(targetKey, fadeDuration);
 	}
 
