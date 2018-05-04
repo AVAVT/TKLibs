@@ -40,6 +40,9 @@ public class SoundManager : MonoBehaviour
 	private List<GameObject> pooledObject;
 	private SoundSetting soundSetting;
 
+	private Coroutine fadeInCoroutine;
+	private Coroutine fadeOutCoroutine;
+
 	/// <summary>
 	/// volume of SE
 	/// </summary>
@@ -253,8 +256,13 @@ public class SoundManager : MonoBehaviour
 	///<summary>
 	public void FadeIn(AudioKey key, float fadeDuration)
 	{
+		if (fadeInCoroutine != null)
+		{
+			StopCoroutine(fadeInCoroutine);
+			fadeInCoroutine = null;
+		}
 		audioDatas[(int)key].Play();
-		StartCoroutine(Fade(audioDatas[(int)key], 0, audioDatas[(int)key].volume, fadeDuration));
+		fadeInCoroutine = StartCoroutine(Fade(audioDatas[(int)key], 0, audioDatas[(int)key].volume, fadeDuration));
 	}
 
 	///<summary>
@@ -262,7 +270,13 @@ public class SoundManager : MonoBehaviour
 	///<summary>
 	public void FadeOut(AudioKey key, float fadeDuration)
 	{
-		StartCoroutine(Fade(audioDatas[(int)key], audioDatas[(int)key].volume, 0, fadeDuration, () =>
+		if (fadeOutCoroutine != null)
+		{
+			StopCoroutine(fadeOutCoroutine);
+			fadeOutCoroutine = null;
+		}
+
+		fadeOutCoroutine = StartCoroutine(Fade(audioDatas[(int)key], audioDatas[(int)key].volume, 0, fadeDuration, () =>
 		{
 			audioDatas[(int)key].Stop();
 		}));
@@ -270,10 +284,11 @@ public class SoundManager : MonoBehaviour
 
 	public void CrossFade(AudioKey targetKey, float fadeDuration)
 	{
-    for(int i = 0; i< audioDatas.Count; i++){
-			if(audioDatas[i].isPlaying)
+		for (int i = 0; i < audioDatas.Count; i++)
+		{
+			if (audioDatas[i].isPlaying)
 				FadeOut((AudioKey)i, fadeDuration);
-		}		
+		}
 		FadeIn(targetKey, fadeDuration);
 	}
 
@@ -290,7 +305,9 @@ public class SoundManager : MonoBehaviour
 		source.volume = targetVolume;
 
 		callback?.Invoke();
-	}
+		fadeInCoroutine = null;
+		fadeOutCoroutine = null;
+ 	}
 
 	#region Pooling
 
@@ -351,7 +368,7 @@ public class SoundManager : MonoBehaviour
 		private int selectAudioSourceIndex;
 		private string newAudioDataName = string.Empty;
 		private List<bool> foldSoundDatas = new List<bool>();
-		private string outputScriptPath = string.Empty;
+		// private string outputScriptPath = string.Empty;
 		private const string SCRIPT_FILE_NAME = "AudioSourceKeyMap.cs";
 
 		private const string SCRIPT_FILE_CONTENT =
