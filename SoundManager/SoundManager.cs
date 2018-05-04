@@ -465,10 +465,10 @@ public class SoundManager : MonoBehaviour
 
 			if (GUILayout.Button("Apply"))
 			{
-				var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets/SoundManager" + SCRIPT_FILE_NAME);
+				var fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets/SoundManager/" + SCRIPT_FILE_NAME);
 
 				if (!fullPath.Contains(Path.Combine(Directory.GetCurrentDirectory(), "Assets")))
-					Debug.LogError("Missing Assets/SoundManager");
+					Debug.LogError("Missing Assets/SoundManager/");
 
 				else
 					using (var writer = new StreamWriter(fullPath, false))
