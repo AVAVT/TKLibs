@@ -132,6 +132,7 @@ public class SoundManager : MonoBehaviour
     }
     int index = (int)nullableIndex;
     pooledObject[index].SetActive(true);
+    pooledObject[index].transform.position = position;
     pooledAudioSource[index].clip = audioDatas[(int)key].clip;
     pooledAudioSource[index].volume = audioDatas[(int)key].volume;
     pooledAudioSource[index].loop = audioDatas[(int)key].loop;
@@ -294,10 +295,12 @@ public class SoundManager : MonoBehaviour
   {
     for (int i = 0; i < audioDatas.Count; i++)
     {
-      if (audioDatas[i].isPlaying)
+      if (audioDatas[i].isPlaying){
         FadeOut((AudioKey)i, fadeDuration);
+        Debug.Log((AudioKey)i);
+      }
     }
-    FadeIn(targetKey, fadeDuration);
+    FadeIn(targetKey, fadeDuration);    
   }
 
   IEnumerator Fade(AudioSource source, float startVolume, float targetVolume, float fadeDuration, Action callback = null)
