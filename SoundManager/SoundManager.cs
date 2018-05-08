@@ -132,6 +132,7 @@ public class SoundManager : MonoBehaviour
     int index = (int)nullableIndex;
     pooledObject[index].SetActive(true);
     pooledObject[index].transform.position = position;
+    
     AudioSource audioSource = pooledObject[index].GetComponent<AudioSource>();
     audioSource.clip = audioDatas[(int)key].clip;
     audioSource.volume = audioDatas[(int)key].volume;
