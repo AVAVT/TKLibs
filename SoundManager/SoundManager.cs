@@ -36,7 +36,6 @@ public class SoundManager : MonoBehaviour
 
   [SerializeField]
   private List<AudioSource> audioDatas = new List<AudioSource>();
-  private List<AudioSource> pooledAudioSource;
   private List<GameObject> pooledObject;
   private SoundSetting soundSetting;
 
@@ -133,15 +132,16 @@ public class SoundManager : MonoBehaviour
     int index = (int)nullableIndex;
     pooledObject[index].SetActive(true);
     pooledObject[index].transform.position = position;
-    pooledAudioSource[index].clip = audioDatas[(int)key].clip;
-    pooledAudioSource[index].volume = audioDatas[(int)key].volume;
-    pooledAudioSource[index].loop = audioDatas[(int)key].loop;
-    pooledAudioSource[index].spatialBlend = audioDatas[(int)key].spatialBlend;
-    pooledAudioSource[index].dopplerLevel = audioDatas[(int)key].dopplerLevel;
-    pooledAudioSource[index].minDistance = audioDatas[(int)key].minDistance;
-    pooledAudioSource[index].maxDistance = audioDatas[(int)key].maxDistance;
-    pooledAudioSource[index].outputAudioMixerGroup = audioDatas[(int)key].outputAudioMixerGroup;
-    pooledAudioSource[index].Play();
+    AudioSource audioSource = pooledObject[index].GetComponent<AudioSource>();
+    audioSource.clip = audioDatas[(int)key].clip;
+    audioSource.volume = audioDatas[(int)key].volume;
+    audioSource.loop = audioDatas[(int)key].loop;
+    audioSource.spatialBlend = audioDatas[(int)key].spatialBlend;
+    audioSource.dopplerLevel = audioDatas[(int)key].dopplerLevel;
+    audioSource.minDistance = audioDatas[(int)key].minDistance;
+    audioSource.maxDistance = audioDatas[(int)key].maxDistance;
+    audioSource.outputAudioMixerGroup = audioDatas[(int)key].outputAudioMixerGroup;
+    audioSource.Play();
   }
 
   public void Play2DSFX(AudioKey key)
@@ -295,12 +295,13 @@ public class SoundManager : MonoBehaviour
   {
     for (int i = 0; i < audioDatas.Count; i++)
     {
-      if (audioDatas[i].isPlaying){
+      if (audioDatas[i].isPlaying)
+      {
         FadeOut((AudioKey)i, fadeDuration);
         Debug.Log((AudioKey)i);
       }
     }
-    FadeIn(targetKey, fadeDuration);    
+    FadeIn(targetKey, fadeDuration);
   }
 
   IEnumerator Fade(AudioSource source, float startVolume, float targetVolume, float fadeDuration, Action callback = null)
@@ -325,11 +326,9 @@ public class SoundManager : MonoBehaviour
   private void InitializeAudioPool()
   {
     pooledObject = new List<GameObject>();
-    pooledAudioSource = new List<AudioSource>();
     for (int i = 0; i < poolAmount; i++)
     {
       GameObject obj = Instantiate(pooledPrefab);
-      pooledAudioSource.Add(obj.GetComponent<AudioSource>());
       obj.transform.parent = this.transform;
       obj.SetActive(false);
       pooledObject.Add(obj);
@@ -340,30 +339,30 @@ public class SoundManager : MonoBehaviour
   {
     for (int i = 0; i < pooledObject.Count(); i++)
     {
-      if (pooledObject[i] == null)
-      {
-        GameObject obj = Instantiate(pooledPrefab);
-        pooledAudioSource.Add(obj.GetComponent<AudioSource>());
-        obj.transform.parent = this.transform;
-        obj.SetActive(false);
-        pooledObject[i] = obj;
-        return i;
-      }
+      // if (pooledObject[i] == null)
+      // {
+      //   GameObject obj = Instantiate(pooledPrefab);
+      //   pooledAudioSource.Add(obj.GetComponent<AudioSource>());
+      //   obj.transform.parent = this.transform;
+      //   obj.SetActive(false);
+      //   pooledObject[i] = obj;
+      //   return i;
+      // }
       if (!pooledObject[i].activeInHierarchy)
       {
         return i;
       }
-
-      if (canGrow)
-      {
-        GameObject obj = Instantiate(pooledPrefab);
-        pooledAudioSource.Add(obj.GetComponent<AudioSource>());
-        obj.transform.parent = this.transform;
-        obj.SetActive(false);
-        pooledObject.Add(obj);
-        return (pooledObject.Count() - 1);
-      }
     }
+
+    if (canGrow)
+    {
+      GameObject obj = Instantiate(pooledPrefab);
+      obj.transform.parent = this.transform;
+      obj.SetActive(false);
+      pooledObject.Add(obj);
+      return (pooledObject.Count() - 1);
+    }
+
     return null;
   }
   #endregion
@@ -386,7 +385,7 @@ public class SoundManager : MonoBehaviour
         @"
 				/*Do not change*/
 
-				public enum AudioKey
+				public enum AudioKey : int
 				{
 				[CONTENT]
 				}";
@@ -503,8 +502,11 @@ public class SoundManager : MonoBehaviour
           using (var writer = new StreamWriter(fullPath, false))
           {
             StringBuilder sb = new StringBuilder();
-            foreach (var key in soundManager.audioNames)
-              sb.Append("\t" + key + ",\r\n");
+            for (int i = 0; i < soundManager.audioNames.Count; i++)
+            {
+              sb.Append("\t" + soundManager.audioNames[i] + " = " + i + ",\r\n");
+            }
+
             var innerContent = sb.ToString();
             var content = SCRIPT_FILE_CONTENT.Replace("[CONTENT]", innerContent);
             writer.Write(content);
