@@ -102,18 +102,9 @@ public class SoundManager : MonoBehaviour
   /// play a sound
   /// </summary>
   /// <param name="key">Key of the sound</param>
-  public void PlayBGM(AudioKey key, bool fade = false, float fadeDuration = 0)
+  public void PlayBGM(string key, bool fade = false, float fadeDuration = 0)
   {
-    audioDatas[(int)key].Play();
-  }
-
-  /// <summary>
-  /// play a sound
-  /// </summary>
-  /// <param name="name">Name of the sound</param>
-  public void PlayBGM(string name, bool fade = false, float fadeDuration = 0)
-  {
-    PlayBGM(ConvertAudioKey(name), fade, fadeDuration);
+    audioDatas[ConvertAudioKey(key)].Play();
   }
 
   /// <summary>
@@ -122,7 +113,7 @@ public class SoundManager : MonoBehaviour
   /// </summary>
   /// <param name="key">key of the sound</param>
   /// <param name ="gameObject">gameObject to attach audioSource</param>
-  public void PlayOneShot(AudioKey key, Vector3 position)
+  public void PlayOneShot(string key, Vector3 position)
   {
     int? nullableIndex = GetPoooledObjectIndex();
     if (nullableIndex == null)
@@ -132,56 +123,38 @@ public class SoundManager : MonoBehaviour
     int index = (int)nullableIndex;
     pooledObject[index].SetActive(true);
     pooledObject[index].transform.position = position;
-    
+
+    int audioIndex = ConvertAudioKey(key);
+
     AudioSource audioSource = pooledObject[index].GetComponent<AudioSource>();
-    audioSource.clip = audioDatas[(int)key].clip;
-    audioSource.volume = audioDatas[(int)key].volume;
-    audioSource.loop = audioDatas[(int)key].loop;
-    audioSource.spatialBlend = audioDatas[(int)key].spatialBlend;
-    audioSource.dopplerLevel = audioDatas[(int)key].dopplerLevel;
-    audioSource.minDistance = audioDatas[(int)key].minDistance;
-    audioSource.maxDistance = audioDatas[(int)key].maxDistance;
-    audioSource.outputAudioMixerGroup = audioDatas[(int)key].outputAudioMixerGroup;
+    audioSource.clip = audioDatas[audioIndex].clip;
+    audioSource.volume = audioDatas[audioIndex].volume;
+    audioSource.loop = audioDatas[audioIndex].loop;
+    audioSource.spatialBlend = audioDatas[audioIndex].spatialBlend;
+    audioSource.dopplerLevel = audioDatas[audioIndex].dopplerLevel;
+    audioSource.minDistance = audioDatas[audioIndex].minDistance;
+    audioSource.maxDistance = audioDatas[audioIndex].maxDistance;
+    audioSource.outputAudioMixerGroup = audioDatas[audioIndex].outputAudioMixerGroup;
     audioSource.Play();
   }
 
-  public void Play2DSFX(AudioKey key)
+  public void Play2DSFX(string key)
   {
     PlayOneShot(key, gameObject.transform.position);
   }
 
-  public void Play2DSFX(string name)
-  {
-    PlayOneShot(ConvertAudioKey(name), gameObject.transform.position);
-  }
-
-  public void Play3DSFX(AudioKey key, Vector3 position)
+  public void Play3DSFX(string key, Vector3 position)
   {
     PlayOneShot(key, position);
-  }
-
-  /// <param name="name">name of the sound</param>
-  public void Play3DSFX(string name, Vector3 position)
-  {
-    PlayOneShot(ConvertAudioKey(name), position);
   }
 
   /// <summary>
   /// Stop a sound
   /// </summary>
   /// <param name="key">key of the sound</param>
-  public void Stop(AudioKey key)
+  public void Stop(string key)
   {
-    audioDatas[(int)key].Stop();
-  }
-
-  /// <summary>
-  /// Stop a sound
-  /// </summary>
-  /// <param name="name">name of the sound</param>
-  public void Stop(string name)
-  {
-    Stop(ConvertAudioKey(name));
+    audioDatas[ConvertAudioKey(key)].Stop();
   }
 
   /// <summary>
@@ -205,13 +178,13 @@ public class SoundManager : MonoBehaviour
   /// <summary>
   /// to convert a string to AudioKey
   /// </summary>
-  /// <param name="name">string to be converted to audio key</param>
-  private AudioKey ConvertAudioKey(string name)
+  /// <param key="key">string to be converted to audio key</param>
+  private int ConvertAudioKey(string key)
   {
-    var keyIndex = audioNames.IndexOf(name);
+    var keyIndex = audioNames.IndexOf(key);
     if (keyIndex < 0)
-      throw new Exception(name + "Failed to convert to AudioKey");
-    return (AudioKey)keyIndex;
+      throw new Exception(key + "Failed to convert to AudioKey");
+    return keyIndex;
   }
 
   public void SetMusicVolume(float volume)
@@ -256,14 +229,13 @@ public class SoundManager : MonoBehaviour
   ///<summary>
   ///Fade In BGM
   ///<summary>
-  public void FadeIn(AudioKey key, float fadeDuration)
+  public void FadeIn(int index, float fadeDuration)
   {
     if (fadeInCoroutine != null) StopCoroutine(fadeInCoroutine);
-
-    audioDatas[(int)key].Play();
+    audioDatas[index].Play();
     fadeInCoroutine = StartCoroutine(
       Fade(
-        audioDatas[(int)key],
+        audioDatas[index],
         0,
         1, // TODO Viet audioDatas[(int)key].volume,
         fadeDuration
@@ -271,35 +243,44 @@ public class SoundManager : MonoBehaviour
     );
   }
 
+  public void FadeIn(string key, float fadeDuration)
+  {
+    FadeIn(ConvertAudioKey(key), fadeDuration);
+  }
+
   ///<summary>
   ///Fade Out BGM
   ///<summary>
-  public void FadeOut(AudioKey key, float fadeDuration)
+  public void FadeOut(int index, float fadeDuration)
   {
     if (fadeOutCoroutine != null) StopCoroutine(fadeOutCoroutine);
 
     fadeOutCoroutine = StartCoroutine(
       Fade(
-        audioDatas[(int)key],
-        audioDatas[(int)key].volume,
+        audioDatas[index],
+        audioDatas[index].volume,
         0,
         fadeDuration,
         () =>
         {
-          audioDatas[(int)key].Stop();
+          audioDatas[index].Stop();
         }
       )
     );
   }
 
-  public void CrossFade(AudioKey targetKey, float fadeDuration)
+  public void FadeOut(string key, float fadeDuration)
+  {
+    FadeOut(ConvertAudioKey(key), fadeDuration);
+  }
+
+  public void CrossFade(string targetKey, float fadeDuration)
   {
     for (int i = 0; i < audioDatas.Count; i++)
     {
       if (audioDatas[i].isPlaying)
       {
-        FadeOut((AudioKey)i, fadeDuration);
-        Debug.Log((AudioKey)i);
+        FadeOut(i, fadeDuration);
       }
     }
     FadeIn(targetKey, fadeDuration);
@@ -340,19 +321,7 @@ public class SoundManager : MonoBehaviour
   {
     for (int i = 0; i < pooledObject.Count(); i++)
     {
-      // if (pooledObject[i] == null)
-      // {
-      //   GameObject obj = Instantiate(pooledPrefab);
-      //   pooledAudioSource.Add(obj.GetComponent<AudioSource>());
-      //   obj.transform.parent = this.transform;
-      //   obj.SetActive(false);
-      //   pooledObject[i] = obj;
-      //   return i;
-      // }
-      if (!pooledObject[i].activeInHierarchy)
-      {
-        return i;
-      }
+      if (!pooledObject[i].activeInHierarchy) return i;
     }
 
     if (canGrow)
@@ -380,15 +349,19 @@ public class SoundManager : MonoBehaviour
     private string newAudioDataName = string.Empty;
     private List<bool> foldSoundDatas = new List<bool>();
     // private string outputScriptPath = string.Empty;
-    private const string SCRIPT_FILE_NAME = "AudioSourceKeyMap.cs";
+    private const string SCRIPT_FILE_NAME = "AudioKey.cs";
 
     private const string SCRIPT_FILE_CONTENT =
         @"
 				/*Do not change*/
-
-				public enum AudioKey : int
-				{
-				[CONTENT]
+        public class AudioKey{
+				  public static string[] Values()
+          {
+            return new string[] {
+              [CONTENT1]
+            };
+          }
+				  [CONTENT2]
 				}";
 
 
@@ -502,17 +475,25 @@ public class SoundManager : MonoBehaviour
         else
           using (var writer = new StreamWriter(fullPath, false))
           {
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < soundManager.audioNames.Count; i++)
             {
-              sb.Append("\t" + soundManager.audioNames[i] + " = " + i + ",\r\n");
+              sb.Append("\t\"" + soundManager.audioNames[i] + "\",\r\n");
             }
-
             var innerContent = sb.ToString();
-            var content = SCRIPT_FILE_CONTENT.Replace("[CONTENT]", innerContent);
+            var content = SCRIPT_FILE_CONTENT.Replace("[CONTENT1]", innerContent);
+            sb.Clear();
+            for (int i = 0; i < soundManager.audioNames.Count; i++)
+            {
+              sb.Append("\tpublic static readonly string " + soundManager.audioNames[i] + " = \"" + soundManager.audioNames[i] + "\";\r\n");
+            }
+            innerContent = sb.ToString();
+            content = content.Replace("[CONTENT2]", innerContent);
+
             writer.Write(content);
             AssetDatabase.Refresh();
-            Debug.Log(string.Format("AudioKey have been saved : {0}", fullPath));
+            Debug.Log(string.Format("string have been saved : {0}", fullPath));
           }
       }
 
