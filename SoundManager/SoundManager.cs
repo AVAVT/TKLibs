@@ -355,11 +355,17 @@ public class SoundManager : MonoBehaviour
         @"
 				/*Do not change*/
         public class AudioKey{
-				  public static string[] Values()
+				  private static string[] values = null;
+          public static string[] Values()
           {
-            return new string[] {
-              [CONTENT1]
-            };
+            if (values == null)
+            {
+              values = new string[] {
+                [CONTENT1]  
+              };
+            }
+            return values;
+
           }
 				  [CONTENT2]
 				}";
