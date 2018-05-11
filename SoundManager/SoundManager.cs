@@ -152,9 +152,21 @@ public class SoundManager : MonoBehaviour
   /// Stop a sound
   /// </summary>
   /// <param name="key">key of the sound</param>
-  public void Stop(string key)
+  public void StopMusic(string key)
   {
     audioDatas[ConvertAudioKey(key)].Stop();
+  }
+
+  public void StopSFX(string key)
+  {
+    int audioIndex = ConvertAudioKey(key);
+    for(int i = 0; i< pooledObject.Count; i++)
+    {
+      if(pooledObject[i].GetComponent<AudioSource>().clip == audioDatas[audioIndex].clip)
+      {
+        pooledObject[i].GetComponent<AudioSource>().Stop();
+      }
+    }
   }
 
   /// <summary>
