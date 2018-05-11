@@ -249,7 +249,7 @@ public class SoundManager : MonoBehaviour
       Fade(
         audioDatas[index],
         0,
-        1, // TODO Viet audioDatas[(int)key].volume,
+        audioDatas[index].volume,
         fadeDuration
       )
     );
@@ -265,6 +265,7 @@ public class SoundManager : MonoBehaviour
   ///<summary>
   public void FadeOut(int index, float fadeDuration)
   {
+    float settingVolume = audioDatas[index].volume;
     if (fadeOutCoroutine != null) StopCoroutine(fadeOutCoroutine);
 
     fadeOutCoroutine = StartCoroutine(
@@ -276,6 +277,7 @@ public class SoundManager : MonoBehaviour
         () =>
         {
           audioDatas[index].Stop();
+          audioDatas[index].volume = settingVolume;
         }
       )
     );
