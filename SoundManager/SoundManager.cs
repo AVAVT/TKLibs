@@ -160,9 +160,9 @@ public class SoundManager : MonoBehaviour
   public void StopSFX(string key)
   {
     int audioIndex = ConvertAudioKey(key);
-    for(int i = 0; i< pooledObject.Count; i++)
+    for (int i = 0; i < pooledObject.Count; i++)
     {
-      if(pooledObject[i].GetComponent<AudioSource>().clip == audioDatas[audioIndex].clip)
+      if (pooledObject[i].GetComponent<AudioSource>().clip == audioDatas[audioIndex].clip)
       {
         pooledObject[i].GetComponent<AudioSource>().Stop();
       }
@@ -356,7 +356,7 @@ public class SoundManager : MonoBehaviour
 #if UNITY_EDITOR
 
   [CustomEditor(typeof(SoundManager))]
-  private class SoundManagetInspector : Editor
+  private class SoundManagerInspector : Editor
   {
     private SoundManager soundManager;
     private int selectAudioSourceIndex;
