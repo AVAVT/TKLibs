@@ -12,11 +12,13 @@ public class CurvableValue
 
   public float ValueAt(float x)
   {
-    return (zeroBelowStart && x < start) ? 0 : TKUtils.ValueFromCurve(curve, (x - start) / (end - start), minValue, maxValue);
+    float rate = end - start != 0 ? (x - start) / (end - start) : 1;
+    return (zeroBelowStart && x < start) ? 0 : TKUtils.ValueFromCurve(curve, rate, minValue, maxValue);
   }
 
   public int IntValueAt(float x)
   {
-    return (zeroBelowStart && x < start) ? 0 : TKUtils.IntValueFromCurve(curve, (x - start) / (end - start), minValue, maxValue);
+    float rate = end - start != 0 ? (x - start) / (end - start) : 1;
+    return (zeroBelowStart && x < start) ? 0 : TKUtils.IntValueFromCurve(curve, rate, minValue, maxValue);
   }
 }
