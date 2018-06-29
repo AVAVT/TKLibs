@@ -1,11 +1,11 @@
 public class WeightedItem<T>
 {
   public T item;
-  public float percentage;
+  public float weight;
 
-  public WeightedItem(T item, float percentage)
+  public WeightedItem(T item, float weight)
   {
     this.item = item;
-    this.percentage = percentage;
+    this.weight = weight;
   }
 }
