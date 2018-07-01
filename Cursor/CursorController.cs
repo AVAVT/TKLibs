@@ -29,21 +29,31 @@ public class CursorController : MonoBehaviour
     ).xy();
   }
 
+  void UseCursor(Sprite cursor)
+  {
+    try
+    {
+      Cursor.visible = false;
+      cursorImage.sprite = cursor;
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogWarning(e);
+    }
+  }
+
   public void UseDefaultCursor()
   {
-    Cursor.visible = false;
-    cursorImage.sprite = defaultCursor;
+    UseCursor(defaultCursor);
   }
 
   public void UseHighLightCursor()
   {
-    Cursor.visible = false;
-    cursorImage.sprite = highlightCursor;
+    UseCursor(highlightCursor);
   }
 
   public void UseDisabledCursor()
   {
-    Cursor.visible = false;
-    cursorImage.sprite = disabledCursor;
+    UseCursor(disabledCursor);
   }
 }
