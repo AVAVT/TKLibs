@@ -4,9 +4,9 @@ using System;
 using System.Reflection;
 
 [CustomPropertyDrawer(typeof(SelectableStringAttribute))]
-public class SelectableStringPropertyDrawer : PropertyDrawer
+public class SelectableStringPropertyDrawer : ConditionalHidePropertyDrawer
 {
-  public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+  public override void DrawGUI(Rect position, SerializedProperty property, GUIContent label)
   {
     SelectableStringAttribute selectableStringAttribute = (SelectableStringAttribute)attribute;
 
@@ -29,7 +29,7 @@ public class SelectableStringPropertyDrawer : PropertyDrawer
     }
     else
     {
-      base.OnGUI(position, property, label);
+      EditorGUI.PropertyField(position, property, label, true);
     }
   }
 }

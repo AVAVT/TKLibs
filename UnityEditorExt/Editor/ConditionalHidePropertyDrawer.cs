@@ -13,10 +13,15 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
     GUI.enabled = enabled;
     if (!condHAtt.HideInInspector || enabled)
     {
-      EditorGUI.PropertyField(position, property, label, true);
+      DrawGUI(position, property, label);
     }
 
     GUI.enabled = wasEnabled;
+  }
+
+  public virtual void DrawGUI(Rect position, SerializedProperty property, GUIContent label)
+  {
+    EditorGUI.PropertyField(position, property, label, true);
   }
 
   public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

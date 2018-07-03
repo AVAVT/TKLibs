@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEditorInternal;
 
 [CustomPropertyDrawer(typeof(SelectableSortingLayerAttribute))]
-public class SelectableSortingLayerPropertyDrawer : PropertyDrawer
+public class SelectableSortingLayerPropertyDrawer : ConditionalHidePropertyDrawer
 {
   private static string[] choices;
   private static string[] Choices
@@ -21,7 +21,7 @@ public class SelectableSortingLayerPropertyDrawer : PropertyDrawer
     }
   }
 
-  public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+  public override void DrawGUI(Rect position, SerializedProperty property, GUIContent label)
   {
     SelectableSortingLayerAttribute selectableSortingLayerAttribute = (SelectableSortingLayerAttribute)attribute;
 
@@ -44,7 +44,7 @@ public class SelectableSortingLayerPropertyDrawer : PropertyDrawer
     }
     else
     {
-      base.OnGUI(position, property, label);
+      EditorGUI.PropertyField(position, property, label, true);
     }
   }
 
