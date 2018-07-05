@@ -13,7 +13,7 @@ public class PixelCanvasController : MonoBehaviour
 
   private void OnDestroy()
   {
-    gameWorldResizer.OnScaleChanged -= OnScaleChanged;
+    if (gameWorldResizer != null) gameWorldResizer.OnScaleChanged -= OnScaleChanged;
   }
 
   void OnScaleChanged(int scale)
