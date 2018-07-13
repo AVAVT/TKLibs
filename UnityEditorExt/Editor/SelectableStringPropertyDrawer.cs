@@ -16,7 +16,7 @@ public class SelectableStringPropertyDrawer : ConditionalHidePropertyDrawer
 
       if (index < 0)
       {
-        Debug.LogWarning("WARNING: value" + property.stringValue + " of " + property.displayName + " is no longer available. Automatically using first value " + selectableStringAttribute.Choices[0]);
+        Debug.LogWarning("WARNING: value " + property.stringValue + " of " + property.displayName + " is no longer available. Automatically using first value " + selectableStringAttribute.Choices[0]);
         index = 0;
       }
       index = EditorGUI.Popup(position, property.displayName, index, selectableStringAttribute.Choices);
