@@ -88,4 +88,10 @@ public class TKUtils : MonoBehaviour
       ValueFromCurve(curve, x, min, max)
     );
   }
+
+  public static bool Dice(int faces, int passThreshold)
+  {
+    if (faces <= 0) throw new System.Exception("You cannot roll a dice with " + faces + " faces!");
+    return Random.Range(0, faces) < passThreshold;
+  }
 }
