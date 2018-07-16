@@ -89,9 +89,9 @@ public class TKUtils : MonoBehaviour
     );
   }
 
-  public static bool Dice(int faces, int passThreshold)
+  public static bool Dice(int faces, int successChance)
   {
     if (faces <= 0) throw new System.Exception("You cannot roll a dice with " + faces + " faces!");
-    return Random.Range(0, faces) < passThreshold;
+    return Random.Range(0, faces) < successChance;
   }
 }
