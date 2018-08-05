@@ -1,19 +1,26 @@
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class PixelCanvasController : MonoBehaviour
 {
-  PixelGameWorldResizer gameWorldResizer;
+  PixelPerfectCamera ppc;
+  int scale;
   private void Start()
   {
-    gameWorldResizer = (FindObjectOfType(typeof(PixelGameWorldResizer)) as PixelGameWorldResizer);
-    OnScaleChanged(gameWorldResizer.Scale);
-    gameWorldResizer.OnScaleChanged += OnScaleChanged;
+    ppc = (FindObjectOfType(typeof(PixelPerfectCamera)) as PixelPerfectCamera);
+    scale = ppc.pixelRatio;
+
+    OnScaleChanged(scale);
   }
 
-  private void OnDestroy()
+  private void Update()
   {
-    if (gameWorldResizer != null) gameWorldResizer.OnScaleChanged -= OnScaleChanged;
+    if (ppc.pixelRatio != scale)
+    {
+      scale = ppc.pixelRatio;
+      OnScaleChanged(scale);
+    }
   }
 
   void OnScaleChanged(int scale)

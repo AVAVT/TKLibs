@@ -9,7 +9,6 @@ public class CursorController : MonoBehaviour
   public Sprite defaultCursor;
   public Sprite highlightCursor;
   public Sprite disabledCursor;
-  public PixelGameWorldResizer gameWorldResizer;
 
   Image cursorImage;
   private void Awake()
@@ -24,9 +23,7 @@ public class CursorController : MonoBehaviour
 
   private void Update()
   {
-    (transform as RectTransform).anchoredPosition = (
-      Input.mousePosition / gameWorldResizer.Scale
-    ).xy();
+    (transform as RectTransform).anchoredPosition = Input.mousePosition;
   }
 
   void UseCursor(Sprite cursor)
