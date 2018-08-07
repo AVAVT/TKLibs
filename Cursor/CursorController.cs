@@ -9,12 +9,14 @@ public class CursorController : MonoBehaviour
   public Sprite defaultCursor;
   public Sprite highlightCursor;
   public Sprite disabledCursor;
+  public CanvasScaler canvasScaler;
 
   Image cursorImage;
   private void Awake()
   {
     Instance = this;
     cursorImage = GetComponent<Image>();
+    canvasScaler = GetComponentInParent<CanvasScaler>();
   }
   void Start()
   {
@@ -23,7 +25,7 @@ public class CursorController : MonoBehaviour
 
   private void Update()
   {
-    (transform as RectTransform).anchoredPosition = Input.mousePosition;
+    (transform as RectTransform).anchoredPosition = Input.mousePosition / canvasScaler.scaleFactor;
   }
 
   void UseCursor(Sprite cursor)
