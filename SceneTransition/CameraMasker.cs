@@ -17,12 +17,43 @@ public class CameraMasker : MonoBehaviour
   private void Start()
   {
     Unmask();
+    SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
+    {
+      SceneManager.SetActiveScene(scene);
+    };
+  }
+
+  public void AddScene(string sceneName)
+  {
+    SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+  }
+
+  public void MaskSwitchScene(string sceneName, System.Action callback = null)
+  {
+    TransitionMaterial.SetTexture("_TransitionTex", maskTexture);
+    StartCoroutine(MaskCoroutine(0f, 1f, sceneName, () =>
+    {
+      if (callback != null) callback();
+      StartCoroutine(SwitchScene(sceneName));
+    }));
+  }
+
+  IEnumerator SwitchScene(string sceneName)
+  {
+    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+    SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+    yield return null;
+    Unmask();
   }
 
   public void MaskChangeScene(string sceneName, System.Action callback = null)
   {
     TransitionMaterial.SetTexture("_TransitionTex", maskTexture);
-    StartCoroutine(MaskCoroutine(0f, 1f, sceneName, callback));
+    StartCoroutine(MaskCoroutine(0f, 1f, sceneName, () =>
+    {
+      if (callback != null) callback();
+      SceneManager.LoadScene(sceneName);
+    }));
   }
 
   public void Unmask()
@@ -45,11 +76,6 @@ public class CameraMasker : MonoBehaviour
 
     TransitionMaterial.SetFloat("_Cutoff", end);
     if (callback != null) callback();
-
-    if (!string.IsNullOrEmpty(targetScene))
-    {
-      SceneManager.LoadScene(targetScene);
-    }
   }
 
   void OnRenderImage(RenderTexture src, RenderTexture dst)

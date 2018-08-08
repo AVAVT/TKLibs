@@ -109,7 +109,7 @@
 					return col = lerp(col, _Color, clamp((_Cutoff-transit.b)/fade, 0.0, 1.0));
 
 					return col;
-				}					
+				}
 				ENDCG
 			}
 		}
