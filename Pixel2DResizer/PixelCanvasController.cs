@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-#if !NO_2D
+#if PIXEL_PERFECT
 public class PixelCanvasController : MonoBehaviour
 {
   PixelPerfectCamera ppc;
