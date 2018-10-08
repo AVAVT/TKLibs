@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
+#if !NO_2D
 public class PixelCanvasController : MonoBehaviour
 {
   PixelPerfectCamera ppc;
@@ -28,3 +29,4 @@ public class PixelCanvasController : MonoBehaviour
     GetComponent<CanvasScaler>().scaleFactor = scale;
   }
 }
+#endif
