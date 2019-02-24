@@ -28,6 +28,23 @@ public static class VectorExtensionMethods
     return vector.normalized * magnitude;
   }
 
+  public static Vector3 ApproxClampMagnitude(this Vector3 vector, float magnitude)
+  {
+    return vector.sqrMagnitude > magnitude * magnitude
+      ? vector.ApproxScaleTo(magnitude)
+      : vector;
+  }
+
+  public static Vector3 ApproxScaleTo(this Vector3 vector, float magnitude)
+  {
+    float idist = Approximation.InvSqrt(vector.sqrMagnitude);
+    return new Vector3(
+      vector.x * idist * magnitude,
+      vector.y * idist * magnitude,
+      vector.z * idist * magnitude
+    );
+  }
+
   public static Vector2 xy(this Vector3 v)
   {
     return new Vector2(v.x, v.y);
