@@ -422,6 +422,7 @@ public class SoundManager : MonoBehaviour
           soundManager.audioDatas[i].loop = EditorGUILayout.Toggle("Loop", soundManager.audioDatas[i].loop);
           soundManager.audioDatas[i].volume = EditorGUILayout.Slider("Volume", soundManager.audioDatas[i].volume, 0, 1);
           soundManager.audioDatas[i].playOnAwake = EditorGUILayout.Toggle("PlayOnAwake", soundManager.audioDatas[i].playOnAwake);
+          soundManager.audioDatas[i].priority = (int)EditorGUILayout.Slider("Priority", soundManager.audioDatas[i].priority, 0f, 255f);
           // soundManager.audioDatas[i].pitch = EditorGUILayout.Slider("Pitch", soundManager.audioDatas[i].pitch, -3, 3);
           // soundManager.audioDatas[i].bypassEffects = EditorGUILayout.Toggle("BypassEffects", soundManager.audioDatas[i].bypassEffects);
           // soundManager.audioDatas[i].bypassListenerEffects = EditorGUILayout.Toggle("BypassListenerEffects", soundManager.audioDatas[i].bypassListenerEffects);
