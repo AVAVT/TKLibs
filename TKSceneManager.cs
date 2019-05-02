@@ -9,7 +9,7 @@ using System.Collections.Generic;
 /// </summary>
 public class TKSceneManager : MonoBehaviour
 {
-  public static readonly float SCREEN_FADE_TIME = 0.2f;
+  public static float SCREEN_FADE_TIME = 0.2f;
   public static readonly string SPLASH_SCENE = "SplashScene";
   public static readonly string START_SCENE = "StartScene";
   public static readonly string SETTINGS_SCENE = "SettingsScene";
