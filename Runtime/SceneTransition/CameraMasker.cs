@@ -11,14 +11,14 @@ namespace TKLibs
     [SerializeField] Texture2D unmaskTexture;
     [SerializeField] float maskTime = 0.2f;
     
-    Material _transitionMaterial;
+    static Material _transitionMaterial;
     
     static readonly int Cutoff = Shader.PropertyToID("_Cutoff");
     static readonly int TransitionTex = Shader.PropertyToID("_TransitionTex");
 
     void Awake()
     {
-      _transitionMaterial = new Material(TransitionMaterial2);
+      _transitionMaterial ??= new Material(TransitionMaterial2);
       _transitionMaterial.SetFloat(Cutoff, 1);
     }
 
