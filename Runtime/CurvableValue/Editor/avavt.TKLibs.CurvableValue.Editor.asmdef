@@ -1,0 +1,18 @@
+{
+    "name": "avavt.TKLibs.CurvableValue.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:eeb102a672c71714d8c641162aa1fa46"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
