@@ -21,4 +21,10 @@ public static class ColorExtensionMethods
   {
     return new Color(c.r, c.g, c.b, a);
   }
+  
+  /*
+   * Quick method to calculate the color luminance, useful for determine which text color to use over a background
+   * source: https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
+   */
+  public static float ApproxLuminance(this Color c) => 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
 }
