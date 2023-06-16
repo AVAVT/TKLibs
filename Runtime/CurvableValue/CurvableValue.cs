@@ -15,13 +15,13 @@ namespace TKLibs
     public float ValueAt(float x)
     {
       var rate = end - start != 0 ? (x - start) / (end - start) : 1;
-      return (zeroBelowStart && x < start) ? 0 : TKUtils.ValueFromCurve(curve, rate, minValue, maxValue);
+      return (zeroBelowStart && x < start) ? 0 : TkUtils.ValueFromCurve(curve, rate, minValue, maxValue);
     }
 
     public int IntValueAt(float x)
     {
       var rate = end - start != 0 ? (x - start) / (end - start) : 1;
-      return (zeroBelowStart && x < start) ? 0 : TKUtils.IntValueFromCurve(curve, rate, minValue, maxValue);
+      return (zeroBelowStart && x < start) ? 0 : TkUtils.IntValueFromCurve(curve, rate, minValue, maxValue);
     }
   }
 }

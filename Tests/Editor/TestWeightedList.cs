@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using TKLibs;
 using Random = System.Random;
@@ -33,10 +34,11 @@ public class TestWeightedList
     {
         Random testRandom = new(TEST_SEED);
         var weightedList = new WeightedList<string>(testRandom);
-        weightedList.AddOrReplace(TEST_STRING_1);
-        weightedList.AddOrReplace(TEST_STRING_2);
-        weightedList.AddOrReplace(TEST_STRING_3);
-        weightedList.AddOrReplace(TEST_STRING_4);
+        
+        var list = new List<string>() { TEST_STRING_1, TEST_STRING_2, TEST_STRING_3, TEST_STRING_4 };
+        foreach (var str in list) {
+            weightedList.AddOrReplace(str);
+        }
         
         var results = new[]{0,0,0,0};
         const int TEST_LOOP_COUNT = 100000; // weight 1 should appear ~ 25000 times
