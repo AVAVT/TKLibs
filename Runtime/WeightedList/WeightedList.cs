@@ -9,7 +9,6 @@ namespace TKLibs
   public class WeightedList<T>
   {
     readonly Dictionary<T, WeightedItem<T>> _itemCache = new();
-    readonly List<WeightedItem<T>> _itemList = new();
     readonly Random _random;
 
     int _currentMaxWeight = 0;
@@ -39,13 +38,13 @@ namespace TKLibs
       
       var ran = _random.Next(0, _currentMaxWeight);
       var weight = 0;
-      foreach (var item in _itemList)
+      foreach (var kvp in _itemCache)
       {
-        weight += item.Weight;
-        if (ran < weight) return item.Item;
+        weight += kvp.Value.Weight;
+        if (ran < weight) return kvp.Key;
       }
       
-      throw new Exception(
+      throw new(
         $"Unable to get random item in list. This is likely due to an error with the library. Random value is {ran}, total list weight is {_currentMaxWeight}"
       );
     }
@@ -56,7 +55,7 @@ namespace TKLibs
     ///
     /// If removal of result item is NOT desired, use RandomItem
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Removed item</returns>
     public T RemoveRandomItem()
     {
       var item = RandomItem();
@@ -72,14 +71,8 @@ namespace TKLibs
     /// <returns>The provided weightedItem</returns>
     public WeightedItem<T> AddOrReplace(WeightedItem<T> weightedItem)
     {
-      if (_itemCache.TryGetValue(weightedItem.Item, out var oldItem))
-      {
-        _itemList.Remove(oldItem);
-      }
-
       _itemCache[weightedItem.Item] = weightedItem;
-      _itemList.Add(weightedItem);
-      _currentMaxWeight = _itemList.Sum(i => i.Weight);
+      _currentMaxWeight = _itemCache.Values.Sum(i => i.Weight);
       
       return weightedItem;
     }
@@ -99,11 +92,9 @@ namespace TKLibs
     /// <returns>true if item successfully removed, false otherwise</returns>
     public bool Remove(T item)
     {
-      if (!_itemCache.TryGetValue(item, out var weightedItem)) return false;
+      var result = _itemCache.Remove(item);
       
-      var result = _itemCache.Remove(item) && _itemList.Remove(weightedItem);
-      
-      if (result) _currentMaxWeight = _itemList.Sum(i => i.Weight);
+      if (result) _currentMaxWeight = _itemCache.Values.Sum(i => i.Weight);
 
       return result;
     }

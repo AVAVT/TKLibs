@@ -2,7 +2,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class TKUtils : MonoBehaviour
+public class TkUtils : MonoBehaviour
 {
 
   public static GameObject Instantiate(GameObject prefab, GameObject parent)
