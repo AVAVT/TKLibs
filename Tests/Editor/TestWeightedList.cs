@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using TKLibs;
+using UnityEngine;
 using Random = System.Random;
 
 public class TestWeightedList
@@ -162,6 +163,22 @@ public class TestWeightedList
         var removedItem = weightedList.RemoveRandomItem();
         
         Assert.IsNull(weightedList.GetWeightedItem(removedItem));
+    }
+
+    [Test]
+    public void TestWeightedList_ProceduralItem()
+    {
+        var weightedList = new WeightedList<string>();
+        weightedList.AddOrReplace(TEST_STRING_1);
+        weightedList.AddOrReplace(TEST_STRING_2);
+        weightedList.AddOrReplace(TEST_STRING_3);
+        weightedList.AddOrReplace(TEST_STRING_4);
+
+        var item = weightedList.ProceduralItem(16);
+        Assert.AreEqual(item, TEST_STRING_1);
+        
+        var item2 = weightedList.ProceduralItem(15);
+        Assert.AreEqual(item2, TEST_STRING_4);
     }
     
     const int TEST_SEED = 1337;
