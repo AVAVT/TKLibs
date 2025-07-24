@@ -13,6 +13,8 @@ namespace TKLibs
 
     int _currentMaxWeight = 0;
     
+    public int CurrentMaxWeight => _currentMaxWeight;
+
     /// <summary>
     /// Create a new WeightedList.
     /// </summary>
@@ -32,11 +34,27 @@ namespace TKLibs
     /// <exception cref="Exception"></exception>
     public T RandomItem()
     {
+      var ran = _random.Next(0, _currentMaxWeight);
+      return ProceduralItem(ran);
+    }
+
+    /// <summary>
+    /// Get an item from the list based on their weight and provided value.
+    /// Providing the same `value` is guaranteed to return the same item.
+    /// 
+    /// If removal of result item is desired, use RemoveRandomItem
+    /// </summary>
+    /// <param name="value">Provide value for procedural behavior.</param>
+    /// <returns>Item based on weight and value</returns>
+    /// <exception cref="Exception"></exception>
+    public T ProceduralItem(int value)
+    {
       if(_currentMaxWeight <= 0) throw new IndexOutOfRangeException(
         $"Unable to get random item in list because list is empty or all items are weightless. Total list weight is: {_currentMaxWeight}"
       );
       
-      var ran = _random.Next(0, _currentMaxWeight);
+      var ran = value % _currentMaxWeight;
+
       var weight = 0;
       foreach (var kvp in _itemCache)
       {
@@ -45,7 +63,7 @@ namespace TKLibs
       }
       
       throw new(
-        $"Unable to get random item in list. This is likely due to an error with the library. Random value is {ran}, total list weight is {_currentMaxWeight}"
+        $"Unable to get item in list. This is likely due to an error with the library. Provided value is {ran}, total list weight is {_currentMaxWeight}"
       );
     }
     
